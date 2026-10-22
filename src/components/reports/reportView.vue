@@ -93,6 +93,7 @@
           </aside>
         </div>
 <!-- Report Section: Resolución -->
+<div class="report-section-with-changes mb-4">
         <v-card v-if="resolutionText" flat class="report-section report-resolution mb-4">
           <div class="report-section-header report-resolution-header">
             <div class="report-resolution-heading">
@@ -123,9 +124,36 @@
               </v-list-item>
             </v-list>
             <div v-else class="disciplinary-measures-empty">No hay medidas adoptadas registradas.</div>
-          </div>                        
-        </v-card>
-<!-- Report Section: Lugar de los Hechos -->
+          </div>
+        </v-card>          
+          <aside v-if="getBubbles('R').length" class="report" :class="{ 'report-single': isSingleBubble('R') }">
+            <v-card
+              v-for="bubble in getBubbles('R')"
+              :key  = "bubble.key"
+              outlined
+              class = "report-bubble pa-4"
+              :class="{ 'report-bubble-multiple': getBubbleParts(bubble).length > 1 }"
+            >
+              <div class="word-diff-container line-height-relaxed">
+                <template v-for="(part, index) in getBubbleParts(bubble)">
+                  <hr v-if="index" :key="`separator-${index}`" class="report-separator">
+                  <span>{{ part }}</span>
+                  <v-btn
+                    text
+                    small
+                    color="primary"
+                    class="report-details-link"
+                    @click="openEventDetails(bubble.entries[index], bubble.entries[index].title)"
+                  >
+                    <v-icon left small>mdi-eye-plus-outline</v-icon>
+                    Ver {{ bubble.entries[index].cantidad > 1 ? bubble.entries[index].cantidad : '' }} más
+                  </v-btn>
+                </template>
+              </div>
+            </v-card>
+          </aside>
+        </div>
+        <!-- Report Section: Lugar de los Hechos -->
         <div class="report-section-with-changes mb-4">
           <v-card flat class="report-section mb-4">
             <div class="report-section-header">
@@ -859,7 +887,7 @@ export default {
       return [this.item, this.tipoInforme]
     },
     hasBubbles() {
-      return ['00', ...Object.values(this.sectionOrdinals)].some(section => this.getBubbles(section)?.length > 0)
+      return ['00', 'R', ...Object.values(this.sectionOrdinals)].some(section => this.getBubbles(section)?.length > 0)
 
     },
     resolvedItem() {
@@ -1080,37 +1108,39 @@ export default {
       this.addBubblesSupplementary(data.eventosAMPLIACIONES, data.cantidadEventosAMPLIACIONES , '10', 'AMP', '000', 'AMPLIACIONES INFORMES')
     },
     addBubblesInformes(data, tipo) {
-      if (data) {
-        let text    = ''    
-        let section = ''
-        for (const [index, evento] of data.entries()) {
-          section = this.fieldOrdinals[evento.concepto] || '00'
-          text    =  ` · Se ${evento.primerRegistro.tipO_EVENTO==='I' ? 'ingresa' : evento.primerRegistro.tipO_EVENTO==='M' ? 'modifica' : 'elimina'} `   
-                      + `con fecha ${this.getFormatDateTime(evento.primerRegistro.actualizacion, 'date')} a las ${this.getFormatDateTime(evento.primerRegistro.actualizacion, 'time')} hrs.`
-                      + ` ${this.textSections[evento.primerRegistro.concepto] || ''} \n`
-          let bubble = this.bubbles.find(item => item.section === section)
-          if (!bubble) {
-            bubble = {
-              key     : section,
-              section : section,
-              entries : [],
-              quantity: 0,
-            }
-            this.bubbles.push(bubble)
+      if (!data) {
+        return  
+      }
+      let text    = ''    
+      let section = ''
+      for (const [index, evento] of data.entries()) {
+        section = this.fieldOrdinals[evento.concepto] || (evento.concepto === 'MEDIDAS_DISCIPLINARIAS' ? 'R' : '00')
+        text    =  ` · Se ${evento.primerRegistro.tipO_EVENTO==='I' ? 'ingresa' : evento.primerRegistro.tipO_EVENTO==='M' ? 'modifica' : 'elimina'} `   
+                    + `con fecha ${this.getFormatDateTime(evento.primerRegistro.actualizacion, 'date')} a las ${this.getFormatDateTime(evento.primerRegistro.actualizacion, 'time')} hrs.`
+                    + ` ${this.textSections[evento.primerRegistro.concepto] || ''} \n`
+        let bubble = this.bubbles.find(item => item.section === section)
+        if (!bubble) {
+          bubble = {
+            key     : section,
+            section : section,
+            entries : [],
+            quantity: 0,
           }
-          bubble.quantity += evento.cantidad || 0
-          bubble.entries.push({
-            key      : `${section}-${index}`,
-            text     : text,
-            tipo     : tipo,
-            concepto : evento.concepto,
-            cantidad : evento.cantidad || 0,
-            title   : this.textSections[evento.primerRegistro.concepto]             
-          })
+          this.bubbles.push(bubble)
         }
+        bubble.quantity += evento.cantidad || 0
+        bubble.entries.push({
+          key      : `${section}-${index}`,
+          text     : text,
+          tipo     : tipo,
+          concepto : evento.concepto,
+          cantidad : evento.cantidad || 0,
+          title   : this.textSections[evento.primerRegistro.concepto]             
+        })
       }
     },    
     addBubblesSupplementary(data, cantidadEventos, idOrdinal, tipo, concepto, title) {
+      if (!data) return
       let text = ''
       if ( tipo === 'INV') {
         text =  ` · Se ${data.tipO_EVENTO==='I' ? 'ingresa' : data.tipO_EVENTO==='M' ? 'modifica' : 'elimina'} `   

@@ -97,6 +97,7 @@
                 <div class="text-caption text--secondary">{{ event.time }} 
                   <span :class="`${event.color}--text`"></span>
                   <v-chip
+                    class="font-weight-bold"
                     :color="event.color"
                     outlined
                     pill
@@ -324,9 +325,9 @@
       return total > 0 ? ((value / total) * 100).toFixed(2) : 0;
     },
     customColor(item) {
-      return  item.estado === 1 ? 'info' :
-              item.estado === 2 && item.devuelto === 'N' ? 'success' : 
-              item.estado === 2 && item.devuelto === 'S' ? 'primary' : 
+      return  item.estado === 1 ? '#52B36B' :
+              item.estado === 2 && item.devuelto === 'N' ? '#EDB730' : 
+              item.estado === 2 && item.devuelto === 'S' ? '#BF3A46' : 
               item.estado === 3 ? 'warning' :
               item.estado === 4 ? '#9e9e9e' :
               item.estado === 5 ? 'secondary' :

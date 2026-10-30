@@ -1583,6 +1583,7 @@
 
 /* Tabla de datos */
   .tabla {
+    margin-top: 18px;
     border: 1px solid #d4e0ec;
     border-radius: 12px;
     overflow: hidden;
@@ -1595,14 +1596,14 @@
     min-width: 980px;
   }
   .tabla ::v-deep thead tr {
-    background: #edf4fb;
+    background: #F7C65E;
   }
   .tabla ::v-deep th {
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #2b4963;
+    color: #1f1400 !important;
     white-space: nowrap;
   }
   .tabla ::v-deep tbody td {
@@ -2078,11 +2079,11 @@
   }
 
   .preliminares-dark ::v-deep .tabla thead tr {
-    background: #2b2f32;
+    background: #8a6d1d;
   }
 
   .preliminares-dark ::v-deep .tabla th {
-    color: #dce4e9;
+    color: #fff4d1 !important;
   }
 
   .preliminares-dark ::v-deep .tabla tbody td {

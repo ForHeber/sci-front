@@ -912,6 +912,7 @@
   }
 /* tabla */
   .tabla {
+    margin-top: 18px;
     border: 1px solid #d4e0ec;
     border-radius: 12px;
     overflow: hidden;
@@ -927,7 +928,7 @@
   }
 
   .tabla ::v-deep thead tr {
-    background: #edf4fb;
+    background: #F7C65E;
   }
 
   .tabla ::v-deep th {
@@ -935,7 +936,7 @@
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #2b4963;
+    color: #1f1400 !important;
     white-space: nowrap;
   }
 
@@ -1293,8 +1294,8 @@
 
     .cdte-dark ::v-deep .tabla thead tr,
     .cdte-dark ::v-deep .tabla thead th {
-      color: #d6e0e8 !important;
-      background: #263542 !important;
+      color: #fff4d1 !important;
+      background: #8a6d1d !important;
       border-color: #405364 !important;
     }
 

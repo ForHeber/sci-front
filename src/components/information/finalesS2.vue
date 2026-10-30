@@ -38,6 +38,8 @@
                       hint          = "Escriba su criterio de búsqueda y presione 'ENTER'"
                       class         = "toolbar-search toolbar-control"
                       @click:append = "lookFor"
+                      clearable
+                      @click:clear = "search = ''; $nextTick(lookFor)"
                       @change       = "lookFor"
                       outlined
                       dense
@@ -1607,6 +1609,8 @@
                       hint          = "Escriba su criterio de búsqueda y presione 'ENTER'"
                       class         = "toolbar-search toolbar-control"
                       @click:append = "lookFor"
+                      clearable
+                      @click:clear = "search = ''; $nextTick(lookFor)"
                       @change       = "lookFor"
                       outlined
                       dense
@@ -1845,6 +1849,8 @@
                       hint          = "Escriba su criterio de búsqueda y presione 'ENTER'"
                       class         = "toolbar-search toolbar-control"
                       @click:append = "lookFor"
+                      clearable
+                      @click:clear = "search = ''; $nextTick(lookFor)"
                       @change       = "lookFor"
                       outlined
                       dense

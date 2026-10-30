@@ -20,6 +20,8 @@
           hint          = "Escriba su criterio de búsqueda y presione 'ENTER'"
           class         = "toolbar-search"
           @click:append = "lookFor"
+          clearable
+          @click:clear = "search = ''; $nextTick(lookFor)"
           @change       = "lookFor"
           outlined
           dense

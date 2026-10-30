@@ -86,7 +86,10 @@
         >
         <v-card class="stats-card" elevation="4" outlined>
           <div class="card-accent"></div>						
-            <v-card-title class="stats-title">{{ getChartById(id).name }}</v-card-title>
+            <v-card-title class="stats-title">
+              <v-icon v-if="getChartById(id).icon" left color="#9b2c3a">{{ getChartById(id).icon }}</v-icon>
+              {{ getChartById(id).name }}
+            </v-card-title>
             <v-card-subtitle class="stats-subtitle">{{ getChartById(id).subtitle }}</v-card-subtitle>
             <v-divider class="mx-4"></v-divider>
             <v-card-text class="stats-content"> 
@@ -146,11 +149,11 @@
   - selected        : Objeto para manejar el estado de los checkboxes de los gráficos.
 */
       charts          : [ 
-        { id: 1 , name: 'Distribución por Estado'                  , lg: 4, subtitle: '' },
-        { id: 2 , name: 'Incidentes por Tipo de Incidente'         , lg: 4, subtitle: '' },
-        { id: 3 , name: 'Incidentes por Fecha'                     , lg: 4, subtitle: '' },
-        { id: 4 , name: 'Incidentes por Grupo de Tipo de Incidente', lg: 4, subtitle: '' },
-        { id: 5 , name: 'Incidentes por Grupo de Tipo de Incidente Mensual', lg: 8, subtitle: '' },
+        { id: 1 , name: 'Distribución por Estado'                  , lg: 4, icon: 'mdi-chart-pie', subtitle: '' },
+        { id: 2 , name: 'Incidentes por Tipo de Incidente'         , lg: 4, icon: 'mdi-chart-bar', subtitle: '' },
+        { id: 3 , name: 'Incidentes por Fecha'                     , lg: 4, icon: 'mdi-chart-line', subtitle: '' },
+        { id: 4 , name: 'Incidentes por Grupo de Tipo de Incidente', lg: 4, icon: 'mdi-group', subtitle: '' },
+        { id: 5 , name: 'Incidentes por Grupo de Tipo de Incidente Mensual', lg: 8, icon: 'mdi-calendar-month-outline', subtitle: '' },
       ],
       selectedCharts  : [  1, 2, 3, 4, 5 ], 
       componentsCharts: {

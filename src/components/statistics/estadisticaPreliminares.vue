@@ -4,7 +4,7 @@
       <v-col cols="12" lg="5">
         <v-card class="stats-card" elevation="4" outlined>
           <div class="card-accent"></div>
-          <v-card-title class="stats-title">Distribucion por Estado</v-card-title>
+          <v-card-title class="stats-title"><v-icon left color="#9b2c3a">mdi-chart-pie</v-icon>Distribucion por Estado</v-card-title>
           <v-card-subtitle class="stats-subtitle">{{ subtitle_1 }}</v-card-subtitle>
           <v-divider class="mx-4"></v-divider>
           <v-card-text class="stats-content">
@@ -24,7 +24,7 @@
       <v-col cols="12" lg="7">
         <v-card class="stats-card" elevation="4" outlined>
           <div class="card-accent"></div>
-          <v-card-title class="stats-title">Tipos de Incidentes  {{ new Date().getFullYear() }}</v-card-title>
+          <v-card-title class="stats-title"><v-icon left color="#9b2c3a">mdi-chart-bar</v-icon>Tipos de Incidentes  {{ new Date().getFullYear() }}</v-card-title>
           <v-card-subtitle class="stats-subtitle">{{ subtitle_2 }}</v-card-subtitle>
           <v-divider class="mx-4"></v-divider>
           <v-card-text class="stats-content">

@@ -8,8 +8,9 @@
           dark
           @click = "newItem()"
         >
+          <v-icon left>mdi-plus</v-icon>
           NUEVO PRELIMINAR
-        </v-btn>                
+        </v-btn>              
         <v-spacer></v-spacer>
 <!-- Filtros de busqueda -->                
         <v-text-field

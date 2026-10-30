@@ -2078,9 +2078,9 @@
         itemsPerPage                  : [ 5, 10, 25, 50 ],
         itemsChip                 : [
           { text: 'Todos'             , value: '00', color: ''          },		
-          { text: 'En Proceso por S2' , value: '01', color: 'success'   },
-          { text: 'Tramitado al Cdte.', value: '02', color: 'info'      },
-          { text: 'Devuelto por Cdte.', value: '03', color: 'primary'   },
+          { text: 'En Proceso por S2' , value: '01', color: '#EDB730', textColor: '#3d2a00' },
+          { text: 'Tramitado al Cdte.', value: '02', color: '#52B36B', textColor: '#07260f' },
+          { text: 'Devuelto por Cdte.', value: '03', color: '#BF3A46', textColor: '#ffffff' },
         ],	
         headers                       : [
           { text: "Id"                        , value: "final.id"                                   , groupable: false, sortable: false },
@@ -3948,5 +3948,8 @@
     color: #e6edf3;
     background: #202d39 !important;
     border-color: #405364 !important;
+  }
+.custom-chip--toolbar.v-chip {
+    font-weight: 700;
   }
 </style>

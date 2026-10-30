@@ -1461,9 +1461,9 @@
         itemsPerPage              : [ 5, 10, 25, 50 ],
         itemsChip                 : [
           { text: 'Todos                  ', value: '00', color: ''  },						
-          { text: 'En Proceso por S2      ', value: '01', color: 'success'   },
-          { text: 'Tramitado al Cdte.     ', value: '02', color: 'info'      },
-          { text: 'Devuelto por Cdte.     ', value: '03', color: 'primary'   },
+          { text: 'En Proceso por S2      ', value: '01', color: '#EDB730', textColor: '#3d2a00' },
+          { text: 'Tramitado al Cdte.     ', value: '02', color: '#52B36B', textColor: '#07260f' },
+          { text: 'Devuelto por Cdte.     ', value: '03', color: '#BF3A46', textColor: '#ffffff' },
           { text: 'Cerrado Temporalmente  ', value: '04', color: '#9e9e9e'   },
           { text: 'Cerrado definitivamente', value: '05', color: 'secondary' }
         ],	
@@ -2952,4 +2952,7 @@
     scrollbar-color: #69747c transparent;
   }
 
+.custom-chip--toolbar.v-chip {
+    font-weight: 700;
+  }
 </style>

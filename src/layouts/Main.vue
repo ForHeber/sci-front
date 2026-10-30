@@ -46,6 +46,21 @@
             
           </template>
         </v-list>
+
+        <!-- Cerrar sesión (parte baja del menú) -->
+        <template v-slot:append>
+          <v-divider />
+          <v-list dense>
+            <v-list-item @click="logout(null)">
+              <v-list-item-action>
+                <v-icon color="red darken-2">mdi-logout</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title class="cerrar-sesion-texto">Cerrar sesión</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </template>
       </v-navigation-drawer>
 
       <v-app-bar clipped-left short flat color="primaryBanner" dark app>
@@ -64,8 +79,24 @@
         <v-spacer />
 
         <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn 
+          <template v-slot:activator="{ on }">
+            <v-btn 
+              class="hidden-sm-and-down" 
+              icon 
+              @click="dialogInstructivo=!dialogInstructivo"
+              v-on="on"
+            >
+              <v-icon color="#F5B027">
+                mdi-help-circle
+              </v-icon>
+            </v-btn>
+          </template>
+          <span>Instructivo del Sistema</span>
+        </v-tooltip>
+
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn 
               class="hidden-sm-and-down" 
               icon 
               @click="toggleTheme"
@@ -75,24 +106,8 @@
                 mdi-theme-light-dark
               </v-icon>
             </v-btn>
-                    </template>
-                    <span>Cambiar tema Oscuro/Brillante</span>
-                </v-tooltip>
-      
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on }">
-            <v-btn 
-              class="hidden-sm-and-down" 
-              icon 
-              @click="dialogInstructivo=!dialogInstructivo"
-              v-on="on"
-            >
-              <v-icon>
-                mdi-help-circle
-              </v-icon>
-            </v-btn>
           </template>
-          <span>Instructivo del Sistema</span>
+          <span>Cambiar tema Oscuro/Brillante</span>
         </v-tooltip>
 
         <v-tooltip bottom>
@@ -111,21 +126,9 @@
                     <span>Segundo Factor de Autenticación</span>
                 </v-tooltip>
 
-        <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-            <v-chip 
-              class="hidden-sm-and-down"
-              @click="logout(null)"
-              v-on="on"
-            >
-              {{ currentUser ? currentUser.Nombres: '' }}
-              <v-icon small class="ml-2">
-                mdi-logout
-              </v-icon>
-            </v-chip>
-                    </template>
-                    <span>Salir del Sistema</span>
-                </v-tooltip>
+        <v-chip class="hidden-sm-and-down" style="pointer-events: none">
+          {{ currentUser ? currentUser.Nombres: '' }}
+        </v-chip>
       
         <v-menu bottom origin="center center" transition="scale-transition" offset-y>
           <template v-slot:activator="{ on }">
@@ -151,7 +154,7 @@
             <v-list-item @click="dialogInstructivo=!dialogInstructivo">
               Instructivo
               <v-spacer />
-              <v-icon class="mr-2">
+              <v-icon class="mr-2" color="#F5B027">
                 mdi-help-circle
               </v-icon>
             </v-list-item>
@@ -593,5 +596,31 @@ export default {
   }
   .v-main-no-menu {
     padding: 56px 0px 0px 0px !important;
+  }
+
+  /* Menú lateral: sombra borgoña suavizada al pasar el mouse y en la opción activa */
+  .v-navigation-drawer ::v-deep .v-list-item {
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .v-navigation-drawer ::v-deep .v-list-item:hover {
+    background-color: rgba(155, 44, 58, 0.14);
+    box-shadow: inset 4px 0 0 rgba(155, 44, 58, 0.75);
+  }
+  .v-navigation-drawer ::v-deep .v-list-item--active {
+    background-color: rgba(155, 44, 58, 0.22);
+    box-shadow: inset 4px 0 0 #9b2c3a;
+    color: #7a1f2b;
+  }
+  .v-navigation-drawer ::v-deep .v-list-item--active .v-icon,
+  .v-navigation-drawer ::v-deep .v-list-item--active .v-list-item__title {
+    color: #7a1f2b !important;
+  }
+  /* Quita el velo gris por defecto de Vuetify para que se vea el borgoña */
+  .v-navigation-drawer ::v-deep .v-list-item::before {
+    background-color: transparent;
+  }
+  .v-navigation-drawer ::v-deep .cerrar-sesion-texto {
+    font-size: 0.9rem;
+    font-weight: 700;
   }
 </style>

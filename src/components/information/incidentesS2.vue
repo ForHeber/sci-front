@@ -24,7 +24,7 @@
             class="custom-chip--toolbar"
             :class="{ 'custom-chip--toolbar-active': estado === item.value, 'custom-chip--toolbar-all': item.value === '00' }"
             :color="item.color"
-            :text-color = "item.color ? 'white' : ''"
+            :text-color = "item.textColor || (item.color ? 'white' : '')"
             @click="changeEstado(item.value)"
           >
             <v-icon v-if="item.value === '00'" left small>mdi-format-list-bulleted</v-icon>
@@ -81,6 +81,7 @@
                 class  =	"custom-chip my-2"
                 pill
                 :color =	"customChipColor(item.incidente)"
+                :text-color = "customChipTextColor(item.incidente)"
               >
                 {{customChipText(item.incidente)}}
               </v-chip>
@@ -1996,10 +1997,14 @@
       validObjectRule(value) {
         return value && ( value.id || value.codigo ) ? true : 'Este campo es requerido'
       },
+      customChipTextColor(item) {
+        const c = this.customChipColor(item)
+        return c === '#EDB730' ? '#3d2a00' : (c === '#52B36B' ? '#07260f' : 'white')
+      },
       customChipColor(item) {
-        return   item.estado === 2 && item.devuelto === 'N' ? 'success' : 
-                (item.estado === 2 && item.devuelto === 'S' ? 'primary'   :
-                'info')
+        return   item.estado === 2 && item.devuelto === 'N' ? '#EDB730' : 
+                (item.estado === 2 && item.devuelto === 'S' ? '#BF3A46'   :
+                '#52B36B')
       },
       customChipText(item) {
         return   item.estado === 2 && item.devuelto === 'N' ? 'En proceso por S2' : 
@@ -2689,13 +2694,13 @@
     color: #6b7885 !important;
   }
   ::v-deep .row-table-display-success {
-    background-color: #f7fcf8 !important;
+    background-color: #fffaee !important;
   }		
   ::v-deep .row-table-display-primary {
     background-color: #fffafa !important;
   }
   ::v-deep .row-table-display-info {
-    background-color: #f8fcff !important;
+    background-color: #f5fbf7 !important;
   }
   ::v-deep .row-table-display-secondary {
     background-color: #fbfbfb !important;
@@ -2715,6 +2720,7 @@
   }
   /* Chip */
   .custom-chip {
+    font-weight: 700;
     border-radius: 50px;
     min-width: 120px;
     justify-content: center;
@@ -2785,11 +2791,11 @@
   }
 
   .incidentes-dark ::v-deep .row-table-display-info {
-    background-color: #242c31 !important;
+    background-color: #232d26 !important;
   }
 
   .incidentes-dark ::v-deep .row-table-display-success {
-    background-color: #252e27 !important;
+    background-color: #2f2b20 !important;
   }
 
   .incidentes-dark ::v-deep .row-table-display-primary {

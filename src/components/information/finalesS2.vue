@@ -52,7 +52,7 @@
                         class="custom-chip--toolbar"
                         :class="{ 'custom-chip--toolbar-active': estado === item.value }"
                         :color="item.color"
-                        :text-color = "item.color ? 'white' : ''"
+                        :text-color = "item.textColor || (item.color ? 'white' : '')"
                         @click="changeEstado(item.value)"
                       >
                         <v-icon v-if="estado === item.value" left small>mdi-check-circle</v-icon>
@@ -110,6 +110,7 @@
                           class  =	"custom-chip my-2"
                           pill
                           :color =	"customChipColor(item.final)"
+                :text-color = "customChipTextColor(item.final)"
                         >
                           {{customChipText(item.final)}}
                         </v-chip>
@@ -2335,10 +2336,14 @@
         const index = this.informesCerrados.indexOf(item)
         return index % 2 === 0 ? 'row-table-display-even' : 'row-table-display-odd'
       },           
+			customChipTextColor(item) {
+			  const c = this.customChipColor(item)
+			  return c === '#EDB730' ? '#3d2a00' : (c === '#52B36B' ? '#07260f' : 'white')
+			},
 			customChipColor(item) {
-				return   item.estado === 2 && item.devuelto === 'N' ? 'success' : 
-								(item.estado === 2 && item.devuelto === 'S' ? 'primary'   :
-								'info')
+				return   item.estado === 2 && item.devuelto === 'N' ? '#EDB730' : 
+								(item.estado === 2 && item.devuelto === 'S' ? '#BF3A46'   :
+								'#52B36B')
 			},
 			customChipText(item) {
 				return   item.estado === 2 && item.devuelto === 'N' ? 'En proceso por S2' : 
@@ -3238,6 +3243,7 @@
   }
 /* Chip */
   .custom-chip {
+    font-weight: 700;
     border-radius: 50px;
     min-width: 120px;
     justify-content: center;
@@ -3681,13 +3687,13 @@
     color: #6b7885 !important;
   }
   ::v-deep .row-table-display-success {
-    background-color: #f7fcf8 !important;
+    background-color: #fffaee !important;
   }			
   ::v-deep .row-table-display-primary {
     background-color: #fffafa !important;
   }
   ::v-deep .row-table-display-info {
-    background-color: #f8fcff !important;
+    background-color: #f5fbf7 !important;
   }
   ::v-deep .row-table-display-secondary {
     background-color: #fbfbfb !important;

@@ -36,7 +36,7 @@
               class="custom-chip--toolbar"
               :class="{ 'custom-chip--toolbar-active': estado === item.value, 'custom-chip--toolbar-all': item.value === '00' }"
               :color="item.color"
-              :text-color = "item.color ? 'white' : ''"
+              :text-color = "item.textColor || (item.color ? 'white' : '')"
               @click="changeEstado(item.value)"
             >
               <v-icon v-if="item.value === '00'" left small>mdi-format-list-bulleted</v-icon>
@@ -94,6 +94,7 @@
               class  =	"custom-chip my-2"
               pill
               :color =	"customChipColor(item.final)"
+                :text-color = "customChipTextColor(item.final)"
             >
               {{customChipText(item.final)}}
             </v-chip>
@@ -1683,10 +1684,14 @@
                 ( final.estado === 1 ? 'row-table-display-info' : 
                   final.estado === 4 ? 'row-table-display-temporary' : 'row-table-display-secondary'))
 			},  
+			customChipTextColor(item) {
+			  const c = this.customChipColor(item)
+			  return c === '#EDB730' ? '#3d2a00' : (c === '#52B36B' ? '#07260f' : 'white')
+			},
 			customChipColor(item) {
-				return    item.estado === 2 && item.devuelto === 'N' ? 'success' : 
-								( item.estado === 2 && item.devuelto === 'S' ? 'primary'   :
-                ( item.estado === 1 ? 'info' : 
+				return    item.estado === 2 && item.devuelto === 'N' ? '#EDB730' : 
+								( item.estado === 2 && item.devuelto === 'S' ? '#BF3A46'   :
+                ( item.estado === 1 ? '#52B36B' : 
                   item.estado === 4 ? '#9e9e9e' : 'secondary'))
 			},
 			customChipText(item) {
@@ -2224,10 +2229,10 @@
 /* color de fondo de las filas según estado */
   
   ::v-deep .row-table-display-info {
-    background-color: #f8fcff !important;
+    background-color: #f5fbf7 !important;
   }
   ::v-deep .row-table-display-success {
-    background-color: #f7fcf8 !important;
+    background-color: #fffaee !important;
   }
   ::v-deep .row-table-display-primary {
     background-color: #fffafa !important;
@@ -2316,6 +2321,7 @@
   }
 /* Chip */
   .custom-chip {
+    font-weight: 700;
     border-radius: 50px;
     min-width: 120px;
     justify-content: center;
@@ -2785,11 +2791,11 @@
   }
 
   .finales-dark ::v-deep .row-table-display-info {
-    background-color: #242c31 !important;
+    background-color: #232d26 !important;
   }
 
   .finales-dark ::v-deep .row-table-display-success {
-    background-color: #252e27 !important;
+    background-color: #2f2b20 !important;
   }
 
   .finales-dark ::v-deep .row-table-display-primary {

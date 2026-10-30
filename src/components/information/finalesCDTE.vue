@@ -468,9 +468,9 @@
           { text: "Tipo incidente"              , value: "final.incidentes.tipO_INCIDENTE.descripcion", groupable: false, sortable: false },
           { text: "Fecha y hora hecho"          , value: "final.fechA_HECHO"                          , groupable: false, sortable: false },
           { text: "Fecha y hora tramite final"  , value: "final.fechA_TRAMITE"                        , groupable: false, sortable: false },
-          { text: "Circunstancias"              , value: "final.incidentes.circunstanciA_HECHO"       , groupable: false, sortable: false },
-          { text: "Medidas disciplinarias"      , value: "final.medidaS_DISCIPLINARIAS"               , groupable: false, sortable: false },
-          { text: "Motivo de devolución"        , value: "motivoDevolucionFin.motivO_DEVOLUCION"      , groupable: false, sortable: false },          
+          { text: "Circunstancias"              , value: "final.incidentes.circunstanciA_HECHO"       , groupable: false, sortable: false, class: "col-texto", cellClass: "col-texto" },
+          { text: "Medidas disciplinarias"      , value: "final.medidaS_DISCIPLINARIAS"               , groupable: false, sortable: false, class: "col-texto", cellClass: "col-texto" },
+          { text: "Motivo de devolución"        , value: "motivoDevolucionFin.motivO_DEVOLUCION"      , groupable: false, sortable: false, class: "col-texto", cellClass: "col-texto" },          
           { text: "Acciones"                    , value: "acciones"                             , groupable: false, sortable: false },  
         ],        
       rules                        : {
@@ -946,13 +946,27 @@
     font-size: 0.82rem;
     font-weight: 300;
     color: #2f4359;
-    vertical-align: top;
+    vertical-align: middle;
+  }
+  /* Contenido centrado con margen interno para que no toque los bordes de la tabla */
+  .tabla ::v-deep tbody td,
+  .tabla ::v-deep thead th {
+    text-align: center !important;
+    padding: 12px 16px !important;
+  }
+  .tabla ::v-deep .tabla-acciones {
+    justify-content: center;
+  }
+  /* Columnas de texto largo: alineadas a la izquierda para leerse mejor */
+  .tabla ::v-deep tbody td.col-texto,
+  .tabla ::v-deep thead th.col-texto {
+    text-align: left !important;
   }
 
   .tabla-bloque {
     white-space: pre-line;
     word-break: break-word;
-    text-align: justify;
+    text-align: left;
   }
 
   .tabla ::v-deep tbody tr:nth-child(even) {

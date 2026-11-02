@@ -14,6 +14,18 @@
 }	
 </script>
 
+<!-- Icono del titulo de cada vista (h2 > v-icon): borgona institucional; en tema oscuro, un tono mas claro para que se lea -->
+<style>
+  .v-application h2 > .v-icon:first-child,
+  .v-application .v-main h3 > .v-icon:first-child {
+    color: #9b2c3a !important;
+  }
+  .v-application.theme--dark h2 > .v-icon:first-child,
+  .v-application.theme--dark .v-main h3 > .v-icon:first-child {
+    color: #e08a95 !important;
+  }
+</style>
+
 <!-- Buscador de las tablas (clase .toolbar-search): estilo tipo "pastilla" con sombra suave y foco borgoña -->
 <style>
   .v-application .v-input.toolbar-search.v-text-field--outlined .v-input__slot {

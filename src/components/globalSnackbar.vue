@@ -1,272 +1,212 @@
 <template>
-	<div class="snackbar-container">
-    <v-snackbar
-      :value    = "snackbars.length > 0"
-      :timeout  = "-1"
-      top
-      right
-      elevation = "0"
-      class     = "custom-snackbar"
-    >
-      <div class="snackbar-card">
-        <div class="snackbar-list-header">
-          <span class="snackbar-list-title">Notificaciones</span>
-          <v-tooltip bottom content-class="snackbar-tooltip-content">
-            <template #activator="{ on, attrs }">
-              <v-btn
-                v-if="snackbars.length > 1"
-                v-bind="attrs"
-                v-on="on"
-                icon
-                x-small
-                class="snackbar-clear-all"
-                depressed
-                elevation="0"
-                @click="closeAll"
-                aria-label="Cerrar todas"
-              >
-                <v-icon size="16" class="snackbar-clear-all-icon">mdi-bell-remove-outline</v-icon>
-              </v-btn>
-            </template>
-            <span>Cerrar todas</span>
-          </v-tooltip>
-        </div>
+  <div v-if="snackbars.length > 0" class="notif-wrap" :class="{ 'notif-wrap--dark': $vuetify.theme.dark }">
 
+    <!-- Pastilla compacta: siempre visible; plegar/desplegar el contenedor -->
+    <div class="notif-pill-row">
+      <button type="button" class="notif-pill" :aria-expanded="String(abierto)" @click="alternar">
+        <v-icon size="18" class="notif-pill-icon">mdi-bell-outline</v-icon>
+        <span class="notif-pill-text">{{ textoPastilla }}</span>
+        <v-icon size="18" class="notif-pill-chevron">{{ abierto ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+      </button>
+    </div>
+
+    <!-- Contenedor con todas las notificaciones agrupadas -->
+    <div v-show="abierto" class="notif-panel">
+      <div class="notif-header">
+        <v-icon size="18" class="notif-header-icon">mdi-bell-outline</v-icon>
+        <span class="notif-header-title">Notificaciones</span>
+        <span class="notif-count">{{ snackbars.length }}</span>
+        <span class="notif-spacer"></span>
+        <button type="button" class="notif-clear-all" @click="closeAll">
+          <v-icon size="14" class="mr-1">mdi-check-all</v-icon>Cerrar todas
+        </button>
+      </div>
+
+      <div class="notif-list">
         <div
-          v-for="(snack, index) in snackbars"
+          v-for="snack in snackbars"
           :key="snack.id"
-          class="snackbar-item"
-          :class="{ 'snackbar-item--divider': index > 0 }"
+          class="notif-item"
+          :style="{ borderLeftColor: colorNivel(snack.color) }"
         >
-          <div class="snackbar-header">
-            <v-icon size="18" :color="snack.color">
-              mdi-bell-outline
-            </v-icon>
-            <span v-if="snack.title" class="snackbar-title"  :style="{ color: snack.color }">
-              {{ snack.title }}
-            </span>
-            <v-btn
-              icon
-              x-small
-              class="snackbar-close-btn"
-              aria-label="Cerrar notificación"
-              @click="closeSnackbar(snack.id)"
-            >
-              <v-icon size="16">mdi-close</v-icon>
-            </v-btn>
+          <v-icon size="18" class="notif-item-icon" :color="colorNivel(snack.color)">
+            {{ esRoja(snack.color) ? 'mdi-alert-circle-outline' : 'mdi-clock-outline' }}
+          </v-icon>
+          <div class="notif-item-body">
+            <div v-if="snack.title" class="notif-item-title">{{ snack.title }}</div>
+            <div v-if="snack.text" class="notif-item-text">{{ snack.text }}</div>
           </div>
-
-          <!-- Contenido / Texto del mensaje -->
-          <div v-if="snack.text" class="snackbar-body">
-            <span class="snackbar-text">
-              {{ snack.text }}
-            </span>
-          </div>
+          <button type="button" class="notif-item-close" aria-label="Cerrar notificación" @click="closeSnackbar(snack.id)">
+            <v-icon size="16">mdi-close</v-icon>
+          </button>
         </div>
       </div>
-    </v-snackbar>
+    </div>
+
   </div>
 </template>
 
 <script>
   import { mapState } from 'vuex';
 
+  const CLAVE_ABIERTO = 'SCINotifAbierto';
+  const ROJO          = '#BF3A46';
+  const DORADO        = '#EDB730';
+
   export default {
     name: 'GlobalSnackbar',
+    data: () => ({
+      // Por defecto plegado: que la pantalla no se llene de avisos. Se recuerda la ultima eleccion.
+      abierto: false,
+    }),
     computed: {
-      ...mapState(['snackbars'])
+      ...mapState(['snackbars']),
+      textoPastilla() {
+        const n = this.snackbars.length;
+        return n === 1 ? '1 notificación' : `${n} notificaciones`;
+      },
+    },
+    created() {
+      try { this.abierto = localStorage.getItem(CLAVE_ABIERTO) === '1'; } catch (e) { /* sin almacenamiento */ }
     },
     methods: {
+      alternar() {
+        this.abierto = !this.abierto;
+        try { localStorage.setItem(CLAVE_ABIERTO, this.abierto ? '1' : '0'); } catch (e) { /* sin almacenamiento */ }
+      },
+      // Las pantallas envian '#b71c1c' (vencida) o '#f59e0b' (por vencer): se unifican con la paleta del sistema.
+      esRoja(color) {
+        return String(color || '').toLowerCase() === '#b71c1c';
+      },
+      colorNivel(color) {
+        return this.esRoja(color) ? ROJO : DORADO;
+      },
       closeSnackbar(id) {
         this.$store.commit('REMOVE_SNACKBAR', id);
       },
       closeAll() {
-        this.snackbars.forEach(snack => this.closeSnackbar(snack.id));
+        this.$store.commit('CLEAR_SNACKBARS');
       },
-    }
-  }
+    },
+  };
 </script>
 
 <style scoped>
-.snackbar-container {
+.notif-wrap {
   position: fixed;
-  top: 90px;
-  right: 25px;
+  top: 66px;
+  right: 20px;
   z-index: 9999;
+  width: 380px;
+  max-width: calc(100vw - 40px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
   pointer-events: none;
 }
+.notif-wrap > * { pointer-events: auto; }
 
-.snackbar-container ::v-deep .v-snack {
-  position: absolute !important;
-  top: 0 !important;
-  right: 0 !important;
-  left: auto !important;
-  bottom: auto !important;
-  pointer-events: auto;
-}
-
-.snackbar-container ::v-deep .v-snack__wrapper {
-  background-color: transparent !important;
-  box-shadow: none !important;
-  width: min(1000px, calc(100vw - 50px));
-  min-width: 320px;
-  max-width: 1000px;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-.snackbar-container ::v-deep .v-snack__content {
-  padding: 0 !important;
-  width: 100%;
-}
-
-.snackbar-card {
-  display: flex;
-  flex-direction: column;
+/* Pastilla */
+.notif-pill-row { display: flex; justify-content: flex-end; width: 100%; }
+.notif-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 12px;
+  border-radius: 999px;
   background: #ffffff;
-  border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  /* border-top: 2px solid #104bb9; */
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-  padding: 10px 14px 12px 14px;
-  gap: 6px;
-  background-color:#F3F4F6;
-  max-height: 60vh;
-  overflow-y: auto;
-}
-
-.snackbar-list-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 4px;
-  margin-bottom: 2px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  position: sticky;
-  top: 0;
-  background-color: #F3F4F6;
-  z-index: 1;
-}
-
-.snackbar-list-title {
+  border: 1px solid rgba(155, 44, 58, 0.25);
+  box-shadow: 0 4px 14px rgba(155, 44, 58, 0.16);
   font-size: 0.8rem;
-  font-weight: 300;
-  color: #121314;
-  letter-spacing: 0.03em;
+  font-weight: 700;
+  color: #1f1400;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
+.notif-pill:hover { border-color: #9b2c3a; box-shadow: 0 6px 18px rgba(155, 44, 58, 0.24); }
+.notif-pill-icon, .notif-pill-chevron { color: #9b2c3a !important; }
 
-.snackbar-clear-all {
-  font-size: 0.72rem;
-  text-transform: none;
-  min-width: 0 !important;
-  width: 26px !important;
-  height: 26px !important;
-  padding: 0 !important;
-  border-radius: 6px !important;
-  border: 1px solid rgba(15, 23, 42, 0.12) !important;
-  background-color: #ffffff !important;
-  box-shadow: none !important;
-  color: #111827 !important;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-}
-
-.snackbar-clear-all:hover {
-  background-color: #f8fafc !important;
-}
-
-.snackbar-clear-all .v-btn__content {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  color: #111827 !important;
-}
-
-.snackbar-clear-all .v-icon,
-.snackbar-clear-all-icon {
-  color: #111827 !important;
-  opacity: 1 !important;
-}
-
-.snackbar-tooltip-content {
-  z-index: 2147483647 !important;
-  background-color: #ffffff !important;
-  color: #111827 !important;
-  font-weight: 300 !important;
-  letter-spacing: 0.01em;
-  border: 1px solid rgba(15, 23, 42, 0.08) !important;
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12) !important;
-}
-
-.snackbar-tooltip-content .v-tooltip__content {
-  background-color: #ffffff !important;
-}
-
-.snackbar-item {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 8px 0;
-}
-
-.snackbar-item--divider {
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.snackbar-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* Contenedor */
+.notif-panel {
   width: 100%;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 10px 28px rgba(155, 44, 58, 0.18);
+  overflow: hidden;
 }
-
-
-.snackbar-icon-box {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  border-radius: 6px;
+.notif-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #f7c65e;
 }
-
-.snackbar-title {
-  font-size: 0.8rem;
-  font-weight: 300;
-  color: #1E293B;
-  line-height: 1.2;
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow-wrap: anywhere;
-  white-space: normal;
+.notif-header-icon { color: #1f1400 !important; }
+.notif-header-title { font-size: 0.88rem; font-weight: 700; color: #1f1400; }
+.notif-count {
+  min-width: 22px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: #9b2c3a;
 }
-
-.snackbar-close-btn {
-  color: #94A3B8 !important;
-  margin-left: auto;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
+.notif-spacer { flex: 1; }
+.notif-clear-all {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid #1f1400;
+  background: transparent;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1f1400;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
 }
+.notif-clear-all:hover { background: rgba(31, 20, 0, 0.1); }
+.notif-clear-all .v-icon { color: #1f1400 !important; }
 
-.snackbar-close-btn:hover {
-  color: #475569 !important;
-  background-color: #F1F5F9 !important;
-}
-
-.snackbar-body {
-  padding-left: 38px;
+/* Lista (con scroll interno: no crece sobre la pantalla) */
+.notif-list { max-height: 250px; overflow-y: auto; }
+.notif-item {
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 8px 10px 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-left: 4px solid transparent;
 }
+.notif-item-icon { margin-top: 1px; }
+.notif-item-body { flex: 1; min-width: 0; }
+.notif-item-title { font-size: 0.8rem; font-weight: 700; color: #1f1400; line-height: 1.25; overflow-wrap: anywhere; }
+.notif-item-text  { margin-top: 2px; font-size: 0.78rem; font-weight: 400; color: #5b6572; line-height: 1.3; overflow-wrap: anywhere; }
+.notif-item-close {
+  border: none;
+  background: transparent;
+  padding: 2px;
+  border-radius: 6px;
+  color: #6b7885;
+  cursor: pointer;
+}
+.notif-item-close:hover { background: rgba(155, 44, 58, 0.1); color: #9b2c3a; }
 
-.snackbar-text {
-  font-size: 0.84rem;
-  font-weight: 400;
-  color: #475569;
-  line-height: 1.4;
-  word-break: break-word;
-}
+/* Tema oscuro */
+.notif-wrap--dark .notif-pill,
+.notif-wrap--dark .notif-panel { background: #2b2f32; border-color: #45494d; }
+.notif-wrap--dark .notif-pill { color: #fff4d1; }
+.notif-wrap--dark .notif-header { background: #8a6d1d; }
+.notif-wrap--dark .notif-header-icon,
+.notif-wrap--dark .notif-header-title,
+.notif-wrap--dark .notif-clear-all,
+.notif-wrap--dark .notif-clear-all .v-icon { color: #fff4d1 !important; }
+.notif-wrap--dark .notif-clear-all { border-color: #fff4d1; }
+.notif-wrap--dark .notif-item { border-top-color: #45494d; }
+.notif-wrap--dark .notif-item-title { color: #fff4d1; }
+.notif-wrap--dark .notif-item-text  { color: #c5ccd3; }
 </style>

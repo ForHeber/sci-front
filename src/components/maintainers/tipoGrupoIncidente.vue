@@ -18,6 +18,8 @@
           hint          = "Escriba su criterio de búsqueda y presione 'ENTER'"
           :class        = "['toolbar-search', $vuetify.breakpoint.mdAndUp ? 'pt-6' : 'mt-4']"
           @click:append = "lookFor"
+          clearable
+          @click:clear = "search = ''; $nextTick(lookFor)"
           @change       = "lookFor"                    
           outlined
           dense

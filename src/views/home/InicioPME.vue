@@ -48,8 +48,8 @@
               <span class="text-caption text-uppercase font-weight-medium text--secondary">
                 {{ card.title }}
               </span>
-              <v-avatar size="34" :color="card.iconBg">
-                <v-icon size="18" color="white">{{ card.icon }}</v-icon>
+              <v-avatar size="48" :color="card.iconBg">
+                <v-icon size="28" :color="card.iconColor || 'white'">{{ card.icon }}</v-icon>
               </v-avatar>
             </div>
             <div class="text-h5 font-weight-bold mb-1">{{ card.value }}</div>
@@ -178,9 +178,9 @@
       const resp = await this.getEstadisticasPreliminaresPorEstados();
 
       this.statsCards = [ 
-        { title : 'Informes hoy'                , value : resp.data.totalPreliminaresTurno  , icon : 'mdi-file-document-outline'         , iconBg : 'info'     , },
-        { title : 'Total de informes del año ' + new Date().getFullYear(), value : resp.data.totalPreliminaresAgno   , icon : 'mdi-file-document-multiple-outline', iconBg : '#ffca28'  , },
-        { title : 'Total de informes a la fecha', value : resp.data.totalPreliminaresGeneral, icon : 'mdi-file-document-multiple-outline', iconBg : 'secondary', }        
+        { title : 'Informes hoy'                , value : resp.data.totalPreliminaresTurno  , icon : 'mdi-calendar-today'                , iconBg : 'info'     , },
+        { title : 'Total de informes del año ' + new Date().getFullYear(), value : resp.data.totalPreliminaresAgno   , icon : 'mdi-calendar-range', iconBg : '#ffca28', iconColor : '#3d2a00', },
+        { title : 'Total de informes a la fecha', value : resp.data.totalPreliminaresGeneral, icon : 'mdi-archive', iconBg : 'secondary', }        
       ]
       this.shortcuts = [
         { title : 'Nuevo informe preliminar', subtitle : 'Registrar un nuevo incidente/accidente'             , icon : 'mdi-file-document-plus-outline', route : { name: 'preliminares', query: { action: 'newItem' } },          },

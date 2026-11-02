@@ -23,7 +23,7 @@
       idUnidad : { type: String, required: true }
     },        
     data       : () => ({
-      pieChartDataSets      : { series : [], chartOptions : { labels : [], colors : ['#2196f3','#4caf50','#ff5252','#e0e0e0','#bdbdbd' ], } },
+      pieChartDataSets      : { series : [], chartOptions : { labels : [], colors : ['#52B36B','#EDB730','#BF3A46','#e0e0e0','#bdbdbd' ], } },
       pieDataSets           : [],                                           
       showPieChart          : false, 
       subtitle              : '',

@@ -8,8 +8,9 @@
           dark
           @click = "newItem()"
         >
+          <v-icon left>mdi-plus</v-icon>
           NUEVO PRELIMINAR
-        </v-btn>                
+        </v-btn>              
         <v-spacer></v-spacer>
 <!-- Filtros de busqueda -->                
         <v-text-field
@@ -19,6 +20,8 @@
           hint          = "Escriba su criterio de búsqueda y presione 'ENTER'"
           class         = "toolbar-search"
           @click:append = "lookFor"
+          clearable
+          @click:clear = "search = ''; $nextTick(lookFor)"
           @change       = "lookFor"
           outlined
           dense
@@ -1062,7 +1065,7 @@
         { text: "Id"                    , value: "id"                        , groupable: false, sortable: false },
         { text: "Tipo incidente"        , value: "tipO_INCIDENTE.descripcion", groupable: false, sortable: false },
         { text: "Fecha y hora del hecho", value: "fechA_HECHO"               , groupable: false, sortable: false },
-        { text: "Circunstancias"        , value: "circunstanciA_HECHO"       , groupable: false, sortable: false },
+        { text: "Circunstancias"        , value: "circunstanciA_HECHO"       , groupable: false, sortable: false, class: "col-texto", cellClass: "col-texto" },
         { text: "Unidad responsable"    , value: "u_AFECTADA.sigla"          , groupable: false, sortable: false },
         { text: "Estado"                , value: "estado"                    , groupable: false, sortable: false },
         { text: "Acciones"              , value: "acciones"                  , groupable: false, sortable: false },  
@@ -1615,6 +1618,7 @@
 
 /* Tabla de datos */
   .tabla {
+    margin-top: 18px;
     border: 1px solid #d4e0ec;
     border-radius: 12px;
     overflow: hidden;
@@ -1627,26 +1631,40 @@
     min-width: 980px;
   }
   .tabla ::v-deep thead tr {
-    background: #edf4fb;
+    background: #F7C65E;
   }
   .tabla ::v-deep th {
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #2b4963;
+    color: #1f1400 !important;
     white-space: nowrap;
   }
   .tabla ::v-deep tbody td {
     font-size: 0.82rem;
     font-weight: 300;
     color: #2f4359;
-    vertical-align: top;
+    vertical-align: middle;
+  }
+  /* Contenido centrado con margen interno para que no toque los bordes de la tabla */
+  .tabla ::v-deep tbody td,
+  .tabla ::v-deep thead th {
+    text-align: center !important;
+    padding: 12px 16px !important;
+  }
+  .tabla ::v-deep .tabla-acciones {
+    justify-content: center;
+  }
+  /* Columnas de texto largo: alineadas a la izquierda para leerse mejor */
+  .tabla ::v-deep tbody td.col-texto,
+  .tabla ::v-deep thead th.col-texto {
+    text-align: left !important;
   }
   .tabla-bloque {
     white-space: pre-line;
     word-break: break-word;
-    text-align: justify;
+    text-align: left;
   }	
   .tabla ::v-deep tbody tr:nth-child(even) {
     background-color: #fbfdff;
@@ -2115,11 +2133,11 @@
   }
 
   .preliminares-dark ::v-deep .tabla thead tr {
-    background: #2b2f32;
+    background: #8a6d1d;
   }
 
   .preliminares-dark ::v-deep .tabla th {
-    color: #dce4e9;
+    color: #fff4d1 !important;
   }
 
   .preliminares-dark ::v-deep .tabla tbody td {

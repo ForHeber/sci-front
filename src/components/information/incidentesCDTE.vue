@@ -10,6 +10,8 @@
           hint          = "Escriba su criterio de búsqueda y presione 'ENTER'"
           class         = "toolbar-search toolbar-control"
           @click:append = "lookFor"
+          clearable
+          @click:clear = "search = ''; $nextTick(lookFor)"
           @change       = "lookFor"
           outlined
           dense
@@ -472,9 +474,9 @@
         { text: "Tipo incidente"          , value: "incidente.tipO_INCIDENTE.descripcion"     , groupable: false, sortable: false },
         { text: "Fecha y hora del hecho"  , value: "incidente.fechA_HECHO"                    , groupable: false, sortable: false },
         { text: "Fecha y hora publicación", value: "incidente.fechA_PUBLICACION"              , groupable: false, sortable: false },
-        { text: "Circunstancias"          , value: "incidente.circunstanciA_HECHO"            , groupable: false, sortable: false, },
-        { text: "Medidas disciplinarias"  , value: "incidente.medidaS_DISCIPLINARIAS"         , groupable: false, sortable: false },
-        { text: "Motivo de devolución"    , value: "motivoDevolucionFin.motivO_DEVOLUCION", groupable: false, sortable: false },                  
+        { text: "Circunstancias"          , value: "incidente.circunstanciA_HECHO"            , groupable: false, sortable: false, class: "col-texto", cellClass: "col-texto" },
+        { text: "Medidas disciplinarias"  , value: "incidente.medidaS_DISCIPLINARIAS"         , groupable: false, sortable: false, class: "col-texto", cellClass: "col-texto" },
+        { text: "Motivo de devolución"    , value: "motivoDevolucionFin.motivO_DEVOLUCION", groupable: false, sortable: false, class: "col-texto", cellClass: "col-texto" },                  
         { text: "Acciones"                , value: "acciones"                             , groupable: false, sortable: false },  
       ],
       itemsPerPage                   : [ 5, 10, 25, 50 ],
@@ -844,6 +846,7 @@
   }
 /* tabla */
   .tabla {
+    margin-top: 18px;
     border: 1px solid #d4e0ec;
     border-radius: 12px;
     overflow: hidden;
@@ -859,7 +862,7 @@
   }
 
   .tabla ::v-deep thead tr {
-    background: #edf4fb;
+    background: #F7C65E;
   }
 
   .tabla ::v-deep th {
@@ -867,7 +870,7 @@
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #2b4963;
+    color: #1f1400 !important;
     white-space: nowrap;
   }
 
@@ -875,12 +878,26 @@
     font-size: 0.82rem;
     font-weight: 300;
     color: #2f4359;
-    vertical-align: top;
+    vertical-align: middle;
+  }
+  /* Contenido centrado con margen interno para que no toque los bordes de la tabla */
+  .tabla ::v-deep tbody td,
+  .tabla ::v-deep thead th {
+    text-align: center !important;
+    padding: 12px 16px !important;
+  }
+  .tabla ::v-deep .tabla-acciones {
+    justify-content: center;
+  }
+  /* Columnas de texto largo: alineadas a la izquierda para leerse mejor */
+  .tabla ::v-deep tbody td.col-texto,
+  .tabla ::v-deep thead th.col-texto {
+    text-align: left !important;
   }
   .tabla-bloque {
     white-space: pre-line;
     word-break: break-word;
-    text-align: justify;
+    text-align: left;
   }
   .tabla ::v-deep tbody tr:nth-child(even) {
     background-color: #fbfdff;
@@ -1234,8 +1251,8 @@
 
   .cdte-dark ::v-deep .tabla thead tr,
   .cdte-dark ::v-deep .tabla thead th {
-    color: #d6e0e8 !important;
-    background: #263542 !important;
+    color: #fff4d1 !important;
+    background: #8a6d1d !important;
     border-color: #405364 !important;
   }
 

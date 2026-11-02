@@ -69,7 +69,10 @@
         >
         <v-card class="stats-card" elevation="4" outlined>
           <div class="card-accent"></div>						
-            <v-card-title class="stats-title">{{ getChartById(id).name }}</v-card-title>
+            <v-card-title class="stats-title">
+              <v-icon v-if="getChartById(id).icon" left color="#9b2c3a">{{ getChartById(id).icon }}</v-icon>
+              {{ getChartById(id).name }}
+            </v-card-title>
             <v-card-subtitle class="stats-subtitle">{{ getChartById(id).subtitle }}</v-card-subtitle>
             <v-divider class="mx-4"></v-divider>
             <v-card-text class="stats-content"> 
@@ -160,18 +163,18 @@
   - selected        : Objeto para manejar el estado de los checkboxes de los gráficos.
 */
       charts          : [ 
-        { id:  1 , name: 'Cantidad de Incidentes y Accidentes'               , lg: 4, subtitle: '' },
-        { id:  2 , name: 'Incidentes que afecten a la Persona o Unidad'      , lg: 4, subtitle: '' },        
-        { id:  3 , name: 'Desgloce por Tipo de Ingesta'                      , lg: 4, subtitle: '' },        
-        { id:  4 , name: 'Comparativa por Tipo de Identificación'            , lg: 4, subtitle: '' },
-        { id:  5 , name: 'Proporción de incidentes por Tipo de Armamento'    , lg: 4, subtitle: '' },
-        { id:  6, name: 'Cantidad de Incidentes con arma Fiscal o Particular', lg: 4, subtitle: '' },
-        { id:  7 , name: 'Incidentes por Tipo de Investigación'              , lg: 4, subtitle: '' },        
-        { id:  8 , name: 'Distribución por Estado'                           , lg: 4, subtitle: '' },
-        { id:  9 , name: 'Incidentes por Tipo de Incidente'                  , lg: 4, subtitle: '' },
-        { id: 10 , name: 'Incidentes por Fecha'                              , lg: 4, subtitle: '' },
-        { id: 11 , name: 'Incidentes por Grupo de Tipo de Incidente'         , lg: 4, subtitle: '' }, 
-        { id: 12 , name: 'Incidentes por Grupo de Tipo de Incidente Mensual' , lg: 8, subtitle: '' },
+        { id:  1 , name: 'Cantidad de Incidentes y Accidentes'               , lg: 4, icon: 'mdi-alert-decagram-outline', subtitle: '' },
+        { id:  2 , name: 'Incidentes que afecten a la Persona o Unidad'      , lg: 4, icon: 'mdi-account-group-outline', subtitle: '' },        
+        { id:  3 , name: 'Desgloce por Tipo de Ingesta'                      , lg: 4, icon: 'mdi-glass-cocktail', subtitle: '' },        
+        { id:  4 , name: 'Comparativa por Tipo de Identificación'            , lg: 4, icon: 'mdi-card-account-details-outline', subtitle: '' },
+        { id:  5 , name: 'Proporción de incidentes por Tipo de Armamento'    , lg: 4, icon: 'mdi-pistol', subtitle: '' },
+        { id:  6, name: 'Cantidad de Incidentes con arma Fiscal o Particular', lg: 4, icon: 'mdi-shield-account-outline', subtitle: '' },
+        { id:  7 , name: 'Incidentes por Tipo de Investigación'              , lg: 4, icon: 'mdi-magnify-scan', subtitle: '' },        
+        { id:  8 , name: 'Distribución por Estado'                           , lg: 4, icon: 'mdi-chart-pie', subtitle: '' },
+        { id:  9 , name: 'Incidentes por Tipo de Incidente'                  , lg: 4, icon: 'mdi-chart-bar', subtitle: '' },
+        { id: 10 , name: 'Incidentes por Fecha'                              , lg: 4, icon: 'mdi-chart-line', subtitle: '' },
+        { id: 11 , name: 'Incidentes por Grupo de Tipo de Incidente'         , lg: 4, icon: 'mdi-group', subtitle: '' }, 
+        { id: 12 , name: 'Incidentes por Grupo de Tipo de Incidente Mensual' , lg: 8, icon: 'mdi-calendar-month-outline', subtitle: '' },
       ],
       selectedCharts  : [  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,12 ], 
       selected        : {},      

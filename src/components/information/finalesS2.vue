@@ -38,6 +38,8 @@
                       hint          = "Escriba su criterio de búsqueda y presione 'ENTER'"
                       class         = "toolbar-search toolbar-control"
                       @click:append = "lookFor"
+                      clearable
+                      @click:clear = "search = ''; $nextTick(lookFor)"
                       @change       = "lookFor"
                       outlined
                       dense
@@ -52,7 +54,7 @@
                         class="custom-chip--toolbar"
                         :class="{ 'custom-chip--toolbar-active': estado === item.value }"
                         :color="item.color"
-                        :text-color = "item.color ? 'white' : ''"
+                        :text-color = "item.textColor || (item.color ? 'white' : '')"
                         @click="changeEstado(item.value)"
                       >
                         <v-icon v-if="estado === item.value" left small>mdi-check-circle</v-icon>
@@ -110,6 +112,7 @@
                           class  =	"custom-chip my-2"
                           pill
                           :color =	"customChipColor(item.final)"
+                :text-color = "customChipTextColor(item.final)"
                         >
                           {{customChipText(item.final)}}
                         </v-chip>
@@ -1606,6 +1609,8 @@
                       hint          = "Escriba su criterio de búsqueda y presione 'ENTER'"
                       class         = "toolbar-search toolbar-control"
                       @click:append = "lookFor"
+                      clearable
+                      @click:clear = "search = ''; $nextTick(lookFor)"
                       @change       = "lookFor"
                       outlined
                       dense
@@ -1844,6 +1849,8 @@
                       hint          = "Escriba su criterio de búsqueda y presione 'ENTER'"
                       class         = "toolbar-search toolbar-control"
                       @click:append = "lookFor"
+                      clearable
+                      @click:clear = "search = ''; $nextTick(lookFor)"
                       @change       = "lookFor"
                       outlined
                       dense
@@ -2078,18 +2085,18 @@
         itemsPerPage                  : [ 5, 10, 25, 50 ],
         itemsChip                 : [
           { text: 'Todos'             , value: '00', color: ''          },		
-          { text: 'En Proceso por S2' , value: '01', color: 'success'   },
-          { text: 'Tramitado al Cdte.', value: '02', color: 'info'      },
-          { text: 'Devuelto por Cdte.', value: '03', color: 'primary'   },
+          { text: 'En Proceso por S2' , value: '01', color: '#EDB730', textColor: '#3d2a00' },
+          { text: 'Tramitado al Cdte.', value: '02', color: '#52B36B', textColor: '#07260f' },
+          { text: 'Devuelto por Cdte.', value: '03', color: '#BF3A46', textColor: '#ffffff' },
         ],	
         headers                       : [
           { text: "Id"                        , value: "final.id"                                   , groupable: false, sortable: false },
           { text: "Tipo incidente"            , value: "final.incidentes.tipO_INCIDENTE.descripcion", groupable: false, sortable: false },
           { text: "Fecha y hora hecho"        , value: "final.fechA_HECHO"                          , groupable: false, sortable: false },
           { text: "Fecha y hora tramite final", value: "final.fechA_TRAMITE"                        , groupable: false, sortable: false },
-          { text: "Circunstancias"            , value: "final.circunstanciA_HECHO"                  , groupable: false, sortable: false },
-          { text: "Medidas disciplinarias"    , value: "final.medidaS_DISCIPLINARIAS"               , groupable: false, sortable: false },
-          { text: "Motivo de devolución"      , value: "motivoDevolucionFin.motivO_DEVOLUCION"      , groupable: false, sortable: false },
+          { text: "Circunstancias"            , value: "final.circunstanciA_HECHO"                  , groupable: false, sortable: false, class: "col-texto", cellClass: "col-texto" },
+          { text: "Medidas disciplinarias"    , value: "final.medidaS_DISCIPLINARIAS"               , groupable: false, sortable: false, class: "col-texto", cellClass: "col-texto" },
+          { text: "Motivo de devolución"      , value: "motivoDevolucionFin.motivO_DEVOLUCION"      , groupable: false, sortable: false, class: "col-texto", cellClass: "col-texto" },
           { text: "Estado"                    , value: "final.estado"                               , groupable: false, sortable: false },
           { text: "Acciones"                  , value: "acciones"                                   , groupable: false, sortable: false },  
         ],        
@@ -2335,10 +2342,14 @@
         const index = this.informesCerrados.indexOf(item)
         return index % 2 === 0 ? 'row-table-display-even' : 'row-table-display-odd'
       },           
+			customChipTextColor(item) {
+			  const c = this.customChipColor(item)
+			  return c === '#EDB730' ? '#3d2a00' : (c === '#52B36B' ? '#07260f' : 'white')
+			},
 			customChipColor(item) {
-				return   item.estado === 2 && item.devuelto === 'N' ? 'success' : 
-								(item.estado === 2 && item.devuelto === 'S' ? 'primary'   :
-								'info')
+				return   item.estado === 2 && item.devuelto === 'N' ? '#EDB730' : 
+								(item.estado === 2 && item.devuelto === 'S' ? '#BF3A46'   :
+								'#52B36B')
 			},
 			customChipText(item) {
 				return   item.estado === 2 && item.devuelto === 'N' ? 'En proceso por S2' : 
@@ -2921,6 +2932,7 @@
   }
 /* tabla */
   .tabla {
+    margin-top: 18px;
     border: 1px solid #d4e0ec;
     border-radius: 12px;
     overflow: hidden;
@@ -2936,7 +2948,7 @@
   }
 
   .tabla ::v-deep thead tr {
-    background: #edf4fb;
+    background: #F7C65E;
   }
 
   .tabla ::v-deep th {
@@ -2944,12 +2956,13 @@
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #2b4963;
+    color: #1f1400 !important;
     white-space: nowrap;
   }
 
 /* Tabla de datos */
   .tabla {
+    margin-top: 18px;
     border: 1px solid #d4e0ec;
     border-radius: 12px;
     overflow: hidden;
@@ -2962,26 +2975,40 @@
     min-width: 980px;
   }
   .tabla ::v-deep thead tr {
-    background: #edf4fb;
+    background: #F7C65E;
   }
   .tabla ::v-deep th {
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #2b4963;
+    color: #1f1400 !important;
     white-space: nowrap;
   }
   .tabla ::v-deep tbody td {
     font-size: 0.82rem;
     font-weight: 300;
     color: #2f4359;
-    vertical-align: top;
+    vertical-align: middle;
+  }
+  /* Contenido centrado con margen interno para que no toque los bordes de la tabla */
+  .tabla ::v-deep tbody td,
+  .tabla ::v-deep thead th {
+    text-align: center !important;
+    padding: 12px 16px !important;
+  }
+  .tabla ::v-deep .tabla-acciones {
+    justify-content: center;
+  }
+  /* Columnas de texto largo: alineadas a la izquierda para leerse mejor */
+  .tabla ::v-deep tbody td.col-texto,
+  .tabla ::v-deep thead th.col-texto {
+    text-align: left !important;
   }
   .tabla-bloque {
     white-space: pre-line;
     word-break: break-word;
-    text-align: justify;
+    text-align: left;
   }	
   .tabla ::v-deep tbody tr:nth-child(even) {
     background-color: #fbfdff;
@@ -3236,6 +3263,7 @@
   }
 /* Chip */
   .custom-chip {
+    font-weight: 700;
     border-radius: 50px;
     min-width: 120px;
     justify-content: center;
@@ -3679,13 +3707,13 @@
     color: #6b7885 !important;
   }
   ::v-deep .row-table-display-success {
-    background-color: #f7fcf8 !important;
+    background-color: #fffaee !important;
   }			
   ::v-deep .row-table-display-primary {
     background-color: #fffafa !important;
   }
   ::v-deep .row-table-display-info {
-    background-color: #f8fcff !important;
+    background-color: #f5fbf7 !important;
   }
   ::v-deep .row-table-display-secondary {
     background-color: #fbfbfb !important;
@@ -3752,8 +3780,8 @@
 
   .finales-s2--dark ::v-deep .tabla thead tr,
   .finales-s2--dark ::v-deep .tabla thead th {
-    color: #d6e0e8 !important;
-    background: #263542 !important;
+    color: #fff4d1 !important;
+    background: #8a6d1d !important;
     border-color: #405364 !important;
   }
 
@@ -3946,5 +3974,8 @@
     color: #e6edf3;
     background: #202d39 !important;
     border-color: #405364 !important;
+  }
+.custom-chip--toolbar.v-chip {
+    font-weight: 700;
   }
 </style>

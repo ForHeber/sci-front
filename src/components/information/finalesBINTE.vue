@@ -10,6 +10,8 @@
           hint          = "Escriba su criterio de búsqueda y presione 'ENTER'"
           class         = "toolbar-search toolbar-control"
           @click:append = "lookFor"
+          clearable
+          @click:clear = "search = ''; $nextTick(lookFor)"
           @change       = "lookFor"
           outlined
           dense
@@ -36,7 +38,7 @@
               class="custom-chip--toolbar"
               :class="{ 'custom-chip--toolbar-active': estado === item.value, 'custom-chip--toolbar-all': item.value === '00' }"
               :color="item.color"
-              :text-color = "item.color ? 'white' : ''"
+              :text-color = "item.textColor || (item.color ? 'white' : '')"
               @click="changeEstado(item.value)"
             >
               <v-icon v-if="item.value === '00'" left small>mdi-format-list-bulleted</v-icon>
@@ -94,6 +96,7 @@
               class  =	"custom-chip my-2"
               pill
               :color =	"customChipColor(item.final)"
+                :text-color = "customChipTextColor(item.final)"
             >
               {{customChipText(item.final)}}
             </v-chip>
@@ -1461,9 +1464,9 @@
         itemsPerPage              : [ 5, 10, 25, 50 ],
         itemsChip                 : [
           { text: 'Todos                  ', value: '00', color: ''  },						
-          { text: 'En Proceso por S2      ', value: '01', color: 'success'   },
-          { text: 'Tramitado al Cdte.     ', value: '02', color: 'info'      },
-          { text: 'Devuelto por Cdte.     ', value: '03', color: 'primary'   },
+          { text: 'En Proceso por S2      ', value: '01', color: '#EDB730', textColor: '#3d2a00' },
+          { text: 'Tramitado al Cdte.     ', value: '02', color: '#52B36B', textColor: '#07260f' },
+          { text: 'Devuelto por Cdte.     ', value: '03', color: '#BF3A46', textColor: '#ffffff' },
           { text: 'Cerrado Temporalmente  ', value: '04', color: '#9e9e9e'   },
           { text: 'Cerrado definitivamente', value: '05', color: 'secondary' }
         ],	
@@ -1472,9 +1475,9 @@
           { text: "Tipo incidente"            , value: "final.incidentes.tipO_INCIDENTE.descripcion", groupable: false, sortable: false },
           { text: "Fecha y hora hecho"        , value: "final.fechA_HECHO"                          , groupable: false, sortable: false },
           { text: "Fecha y hora tramite final", value: "final.fechA_TRAMITE"                        , groupable: false, sortable: false },
-          { text: "Circunstancias"            , value: "final.circunstanciA_HECHO"                  , groupable: false, sortable: false },
-          { text: "Medidas disciplinarias"    , value: "final.medidaS_DISCIPLINARIAS"               , groupable: false, sortable: false },
-          { text: "Motivo de devolución"      , value: "motivoDevolucionFin.motivO_DEVOLUCION"      , groupable: false, sortable: false },
+          { text: "Circunstancias"            , value: "final.circunstanciA_HECHO"                  , groupable: false, sortable: false, class: "col-texto", cellClass: "col-texto" },
+          { text: "Medidas disciplinarias"    , value: "final.medidaS_DISCIPLINARIAS"               , groupable: false, sortable: false, class: "col-texto", cellClass: "col-texto" },
+          { text: "Motivo de devolución"      , value: "motivoDevolucionFin.motivO_DEVOLUCION"      , groupable: false, sortable: false, class: "col-texto", cellClass: "col-texto" },
           { text: "Estado"                    , value: "final.estado"                               , groupable: false, sortable: false },
           { text: "Unidad responsable"        , value: "final.u_AFECTADA.sigla"                     , groupable: false, sortable: false },          
           { text: "Acciones"                  , value: "acciones"                                   , groupable: false, sortable: false },  
@@ -1683,10 +1686,14 @@
                 ( final.estado === 1 ? 'row-table-display-info' : 
                   final.estado === 4 ? 'row-table-display-temporary' : 'row-table-display-secondary'))
 			},  
+			customChipTextColor(item) {
+			  const c = this.customChipColor(item)
+			  return c === '#EDB730' ? '#3d2a00' : (c === '#52B36B' ? '#07260f' : 'white')
+			},
 			customChipColor(item) {
-				return    item.estado === 2 && item.devuelto === 'N' ? 'success' : 
-								( item.estado === 2 && item.devuelto === 'S' ? 'primary'   :
-                ( item.estado === 1 ? 'info' : 
+				return    item.estado === 2 && item.devuelto === 'N' ? '#EDB730' : 
+								( item.estado === 2 && item.devuelto === 'S' ? '#BF3A46'   :
+                ( item.estado === 1 ? '#52B36B' : 
                   item.estado === 4 ? '#9e9e9e' : 'secondary'))
 			},
 			customChipText(item) {
@@ -2120,6 +2127,7 @@
   }
 /* Tabla de datos */
   .tabla {
+    margin-top: 18px;
     border: 1px solid #d4e0ec;
     border-radius: 12px;
     overflow: hidden;
@@ -2132,26 +2140,40 @@
     min-width: 980px;
   }
   .tabla ::v-deep thead tr {
-    background: #edf4fb;
+    background: #F7C65E;
   }
   .tabla ::v-deep th {
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #2b4963;
+    color: #1f1400 !important;
     white-space: nowrap;
   }
   .tabla ::v-deep tbody td {
     font-size: 0.82rem;
     font-weight: 300;
     color: #2f4359;
-    vertical-align: top;
+    vertical-align: middle;
+  }
+  /* Contenido centrado con margen interno para que no toque los bordes de la tabla */
+  .tabla ::v-deep tbody td,
+  .tabla ::v-deep thead th {
+    text-align: center !important;
+    padding: 12px 16px !important;
+  }
+  .tabla ::v-deep .tabla-acciones {
+    justify-content: center;
+  }
+  /* Columnas de texto largo: alineadas a la izquierda para leerse mejor */
+  .tabla ::v-deep tbody td.col-texto,
+  .tabla ::v-deep thead th.col-texto {
+    text-align: left !important;
   }
   .tabla-bloque {
     white-space: pre-line;
     word-break: break-word;
-    text-align: justify;
+    text-align: left;
   }	
   .tabla ::v-deep tbody tr:nth-child(even) {
     background-color: #fbfdff;
@@ -2223,10 +2245,10 @@
 /* color de fondo de las filas según estado */
   
   ::v-deep .row-table-display-info {
-    background-color: #f8fcff !important;
+    background-color: #f5fbf7 !important;
   }
   ::v-deep .row-table-display-success {
-    background-color: #f7fcf8 !important;
+    background-color: #fffaee !important;
   }
   ::v-deep .row-table-display-primary {
     background-color: #fffafa !important;
@@ -2315,6 +2337,7 @@
   }
 /* Chip */
   .custom-chip {
+    font-weight: 700;
     border-radius: 50px;
     min-width: 120px;
     justify-content: center;
@@ -2768,11 +2791,11 @@
   }
 
   .finales-dark ::v-deep .tabla thead tr {
-    background: #2b2f32;
+    background: #8a6d1d;
   }
 
   .finales-dark ::v-deep .tabla th {
-    color: #dce4e9;
+    color: #fff4d1 !important;
   }
 
   .finales-dark ::v-deep .tabla tbody td {
@@ -2784,11 +2807,11 @@
   }
 
   .finales-dark ::v-deep .row-table-display-info {
-    background-color: #242c31 !important;
+    background-color: #232d26 !important;
   }
 
   .finales-dark ::v-deep .row-table-display-success {
-    background-color: #252e27 !important;
+    background-color: #2f2b20 !important;
   }
 
   .finales-dark ::v-deep .row-table-display-primary {
@@ -2951,4 +2974,7 @@
     scrollbar-color: #69747c transparent;
   }
 
+.custom-chip--toolbar.v-chip {
+    font-weight: 700;
+  }
 </style>
